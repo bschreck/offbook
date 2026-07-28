@@ -1,0 +1,104 @@
+@layer components {
+  .lib__search {
+    inline-size: 100%;
+    padding: var(--sp-3);
+    border: 1px solid var(--border-interactive);
+    border-radius: var(--r-sm);
+    background: var(--surface-sunk);
+    margin-block-end: var(--sp-3);
+  }
+
+  .lib__chips {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    overflow-x: auto;
+    padding-block-end: var(--sp-2);
+    margin-block-end: var(--sp-2);
+  }
+
+  .chip {
+    flex: none;
+    min-height: 36px;
+    padding-inline: var(--sp-3);
+    border-radius: var(--r-full);
+    border: 1px solid var(--border);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--surface);
+  }
+  .chip[aria-pressed="true"] {
+    background: var(--accent-wash);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .lib__sort {
+    margin-inline-start: auto;
+    flex: none;
+    min-height: 36px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    background: var(--surface);
+    padding-inline: var(--sp-2);
+    font-size: var(--fs-sm);
+  }
+
+  .lib__list {
+    list-style: none;
+  }
+
+  .lib__row {
+    display: flex;
+    align-items: center;
+    border-block-end: 1px solid var(--border);
+  }
+
+  .lib__main {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1 1 auto;
+    min-inline-size: 0;
+    padding-block: 14px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .lib__title {
+    font-weight: 600;
+    color: var(--text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .lib__meta {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+  }
+
+  .lib__chevron {
+    flex: none;
+    inline-size: 44px;
+    block-size: 44px;
+    display: grid;
+    place-items: center;
+    color: var(--text-faint);
+    font-size: var(--fs-lg);
+    text-decoration: none;
+  }
+  .lib__chevron:hover {
+    color: var(--text-body);
+  }
+
+  .lib__footer {
+    margin-block-start: var(--sp-10);
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+  }
+  .lib__footer a {
+    color: var(--accent-ink);
+  }
+}

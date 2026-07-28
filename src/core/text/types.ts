@@ -53,13 +53,7 @@ export interface Token {
 
 // ---------------------------------------------------------------- lines & blocks
 
-export type BlockType =
-  | 'dialogue'
-  | 'direction'
-  | 'heading'
-  | 'paragraph'
-  | 'verse'
-  | 'label';
+export type BlockType = 'dialogue' | 'direction' | 'heading' | 'paragraph' | 'verse' | 'label';
 
 export interface Line {
   idx: number;

@@ -17,7 +17,7 @@
     position: relative;
   }
   .tap-44::after {
-    content: '';
+    content: "";
     position: absolute;
     inset: 50% 50% 50% 50%;
     min-width: 44px;
@@ -92,6 +92,7 @@
     border: 1px solid var(--border-interactive);
     color: var(--text-body);
     background: var(--surface);
+    text-decoration: none;
     transition: background var(--t-fast) var(--ease-out);
   }
   .btn:hover {

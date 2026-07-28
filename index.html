@@ -2,6 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <!--
+      Cascade order, declared before ANY stylesheet exists.
+      It has to live here rather than in a CSS file: @layer order is fixed by whichever
+      sheet first names a layer, and ES module hoisting evaluates a deeply-imported
+      feature stylesheet before the entry's own CSS imports. When that happened, `reset`
+      was appended AFTER `components` and `button { border: none }` silently erased the
+      underline under every masked word — the single most important pixel in the app.
+    -->
+    <style>
+      @layer reset, tokens, components, utilities;
+    </style>
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta
       name="viewport"

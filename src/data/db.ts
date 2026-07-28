@@ -25,8 +25,10 @@ export function setDbTroubleHandler(fn: BlockedHandler): void {
 function openOnce(): Promise<IDBPDatabase<OffbookDB>> {
   return openDB<OffbookDB>(DB_NAME, DB_VERSION, {
     upgrade(db, oldVersion) {
-      // Deliberate fall-through: a device on v1 runs the v2 arm too.
+      // Deliberate fall-through: a device on v1 must also run the v2 arm. This is the
+      // standard IndexedDB upgrade shape (PLAN.md §6.1) — do not add breaks.
       switch (oldVersion) {
+        // biome-ignore lint/suspicious/noFallthroughSwitchClause: see above — intentional
         case 0: {
           db.createObjectStore('meta', { keyPath: 'key' });
           db.createObjectStore('settings', { keyPath: 'key' });
@@ -73,7 +75,7 @@ async function openWithTimeout(): Promise<IDBPDatabase<OffbookDB>> {
   });
   try {
     return await Promise.race([openOnce(), timeout]);
-  } catch (err) {
+  } catch {
     // One retry: the Safari hang usually clears on a second attempt.
     if (timer) clearTimeout(timer);
     return await openOnce();

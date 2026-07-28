@@ -1,0 +1,31 @@
+@layer components {
+  .import__area,
+  .import__title {
+    inline-size: 100%;
+    padding: var(--sp-3);
+    border: 1px solid var(--border-interactive);
+    border-radius: var(--r-sm);
+    background: var(--surface-sunk);
+    color: var(--text-body);
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .import__area {
+    font-family: var(--font-ui);
+    min-block-size: 40dvh;
+  }
+
+  .import__warnings {
+    margin-block-start: var(--sp-3);
+    padding: var(--sp-3) var(--sp-4);
+    border-inline-start: 3px solid var(--peek-text);
+    background: var(--peek-bg);
+    border-radius: var(--r-xs);
+    font-size: var(--fs-sm);
+    list-style: none;
+  }
+  .import__warnings li + li {
+    margin-block-start: var(--sp-1);
+  }
+}

@@ -48,7 +48,11 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,webmanifest,txt}'],
-        globIgnores: ['**/pdf.worker*.js', '**/pdfjs-*.js'],
+        // Everything pdf.js stays OUT of precache. It is ~1.5 MB that only a PDF importer
+        // ever needs, and precaching it would make a first install five times bigger for a
+        // feature most users never touch. The runtime CacheFirst rule below picks it up
+        // after one use; the named cost is that a user's FIRST PDF import must be online.
+        globIgnores: ['**/pdf.worker*.{js,mjs}', '**/pdf-*.js', '**/pdfLoader-*.js'],
         navigateFallback: `${base}index.html`,
         navigateFallbackDenylist: [/^\/_/],
         cleanupOutdatedCaches: true,

@@ -1,3 +1,4 @@
-/* Cascade order is declared once, here, before any layer has content.
-   Anything unlayered still wins over all of these — keep feature CSS in a layer. */
+/* The authoritative declaration is the inline <style> at the top of index.html — see the
+   comment there for why it cannot live in a CSS file. This restates it so the order is
+   still correct if these styles are ever consumed outside that document. */
 @layer reset, tokens, components, utilities;

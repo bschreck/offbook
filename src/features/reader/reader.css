@@ -1,0 +1,325 @@
+@layer components {
+  /* ============================================================ layout (§9.1)
+     Three layers only: status rail (disposable), text canvas (everything),
+     control bar (thumb-reachable, disposable). No sidebars, no floating buttons
+     over text, no toolbar in the middle. */
+
+  .reader {
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    height: 100dvh;
+    overflow: hidden;
+    background: var(--paper);
+  }
+
+  .reader__rail {
+    display: flex;
+    align-items: center;
+    gap: var(--sp-2);
+    height: 44px;
+    padding-inline: var(--sp-2);
+    padding-top: env(safe-area-inset-top);
+    box-sizing: content-box;
+    border-bottom: 1px solid var(--border);
+    background: var(--paper);
+    transition: opacity var(--t-base) var(--ease-out);
+  }
+
+  .reader__title {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-body);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .reader__stage {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    padding: 4px var(--sp-2);
+    border-radius: var(--r-full);
+    background: var(--accent-wash);
+    color: var(--accent-ink);
+    white-space: nowrap;
+    /* The always-available panic gesture lives here: hold to reveal everything. */
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  /* ---- the canvas ---- */
+
+  .reader__canvas {
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* never let a rubber-band trigger pull-to-refresh or back navigation */
+    overscroll-behavior: contain;
+    /* long-press must not summon the iOS magnifier, the callout or a selection */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    /* also kills the 300ms double-tap-zoom delay, so single taps feel instant */
+    touch-action: manipulation;
+    padding: var(--sp-6) var(--gutter);
+    /* room to scroll the last line up into the reading zone */
+    padding-bottom: 60dvh;
+  }
+
+  .reader__canvas[data-selectable="true"] {
+    user-select: text;
+    -webkit-user-select: text;
+    -webkit-touch-callout: default;
+  }
+
+  .reader__doc {
+    max-width: var(--measure);
+    margin-inline: auto;
+    font-family: var(--font-reader);
+    font-size: var(--fs-reader);
+    line-height: var(--lh-reader);
+    color: var(--text-strong);
+    text-align: left;
+    hyphens: none;
+    text-wrap: pretty;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- blocks and lines ---- */
+
+  .blk {
+    margin-block-end: var(--sp-4);
+  }
+
+  .blk__speaker {
+    font-size: 0.62em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-block-end: 0.2em;
+  }
+
+  .ln {
+    position: relative;
+    /* a wrapped authored line is ONE logical line: continuation rows hang, so it is
+       visually obvious they are not a new verse line (§9.2) */
+    padding-inline-start: calc(1.25em + var(--indent, 0em));
+    text-indent: -1.25em;
+    /* keeps masked/unmasked transitions from reordering RTL text */
+    unicode-bidi: isolate;
+  }
+
+  .ln[data-type="direction"] {
+    font-size: 0.85em;
+    font-style: italic;
+    color: var(--text-faint);
+  }
+
+  .ln[data-type="heading"] {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.8em;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-block: var(--sp-4) var(--sp-2);
+  }
+
+  /* Two signals, never colour alone: a tint AND a 3px left rule. */
+  .ln[data-current="true"] {
+    background: var(--line-current-bg);
+  }
+  .ln[data-current="true"]::before {
+    content: "";
+    position: absolute;
+    inset-block: -2px;
+    inset-inline-start: -16px;
+    width: 3px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+
+  /* Cue lines (other characters) — never masked, still ≥7:1 */
+  .ln[data-cue="true"] {
+    opacity: 0.7;
+  }
+  :root[data-theme="dark"] .ln[data-cue="true"] {
+    opacity: 0.66;
+  }
+
+  /* Line focus: the single most effective concentration aid in the app. */
+  .reader__doc[data-line-focus="true"] .ln:not([data-near="true"]) {
+    opacity: 0.32;
+    transition: opacity var(--t-fast) var(--ease-out);
+  }
+
+  /* A whole hidden line still occupies its exact height — same no-reflow rule as a word. */
+  .ln[data-hidden-line="true"] .tok > .txt {
+    visibility: hidden;
+  }
+
+  /* ============================================================ ADR-0005
+     The mask render contract. `visibility: hidden` on the INNER span is the
+     load-bearing choice: it keeps the exact advance width in every font, and it
+     removes the glyphs from the a11y tree, from selection and from find-in-page.
+     Do not replace it with color:transparent, a measured width, or display:none. */
+
+  .tok {
+    position: relative;
+    display: inline-block;
+    /* `.ln` sets a negative text-indent for its hanging indent, and text-indent is
+       INHERITED — an inline-block is a block container, so without this every token
+       re-applies it to its own first line and the whole text renders on top of itself. */
+    text-indent: 0;
+  }
+
+  .tok[data-mask]:not([data-mask="none"]) > .txt {
+    visibility: hidden;
+  }
+
+  /* Blank styles. The RULE carries the signal — the fill is nearly invisible by design. */
+  .tok[data-mask="rule"] {
+    border-block-end: 2px solid var(--mask-rule);
+  }
+  .tok[data-mask="dots"] {
+    border-block-end: 2px dotted var(--mask-rule);
+  }
+  .tok[data-mask="blank"] {
+    border-block-end: 2px solid transparent;
+  }
+  .tok[data-mask="dim"] > .txt {
+    visibility: visible;
+    opacity: 0.28;
+  }
+
+  /* Box style is a user preference, applied on top of whichever rule is in play. */
+  .reader__doc[data-blank-style="box"]
+  .tok[data-mask]:not([data-mask="none"]):not([data-mask="dim"]) {
+    background: var(--mask-fill);
+    border-radius: var(--r-xs);
+  }
+  .reader__doc[data-blank-style="dots"] .tok[data-mask="rule"] {
+    border-block-end-style: dotted;
+  }
+
+  /* A kept initial: ONE extra absolutely-positioned child, created only when needed. */
+  .tok[data-mask="initial"] > .ovl {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    color: var(--text-strong);
+  }
+
+  /* Hit area: ≥24px effective, without changing the layout box.
+     The plan says inset:-10px; vertical is trimmed to -4px because at the 18px font floor
+     the token box is already ~26px tall, and -10px would overlap the hit areas of the
+     lines above and below — so a tap near a line boundary could peek the wrong word,
+     which is worse than the miss it was meant to prevent. Horizontal stays generous. */
+  .tok[data-mask]:not([data-mask="none"])::after {
+    content: "";
+    position: absolute;
+    inset: -4px -1px;
+  }
+
+  .tok.peek > .txt,
+  .tok.revealed > .txt {
+    visibility: visible;
+  }
+  .tok.peek > .ovl,
+  .tok.revealed > .ovl {
+    display: none;
+  }
+
+  /* The only coloured word on screen: it marks "this one cost you something" and makes
+     your leaning visible in peripheral vision. */
+  .tok.peek {
+    color: var(--peek-text);
+    background: var(--peek-bg);
+    border-radius: var(--r-xs);
+    transition: color var(--t-fast) var(--ease-out);
+  }
+
+  .tok.revealed {
+    border-block-end-color: transparent;
+  }
+
+  /* A masked token is a real button so it is focusable and operable by keyboard. */
+  button.tok {
+    font: inherit;
+    color: inherit;
+    text-align: inherit;
+    line-height: inherit;
+    vertical-align: baseline;
+  }
+
+  /* ---- windowing: only above 2,000 tokens (§8.3) ---- */
+  .reader__doc[data-windowed="true"] .blk {
+    content-visibility: auto;
+    contain-intrinsic-size: auto var(--est-h, 4em);
+  }
+
+  /* ============================================================ control bar */
+
+  .reader__bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--sp-2);
+    padding: var(--sp-2) var(--sp-2) calc(var(--sp-2) + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    background: var(--paper);
+  }
+
+  .reader__progress {
+    height: 2px;
+    background: var(--border);
+  }
+  .reader__progress > i {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+  }
+
+  .ctl {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    inline-size: 56px;
+    block-size: 56px;
+    border-radius: var(--r-sm);
+    font-size: var(--fs-2xs);
+    font-weight: 600;
+    color: var(--text-body);
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .ctl:hover {
+    background: var(--surface-sunk);
+  }
+  .ctl[disabled] {
+    opacity: 0.4;
+  }
+  .ctl__glyph {
+    font-size: var(--fs-lg);
+    line-height: 1;
+  }
+
+  .reader--immersive .reader__rail,
+  .reader--immersive .reader__bar {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* ============================================================ forced colors
+     A blank that disappears in Windows High Contrast makes the app unusable. */
+  @media (forced-colors: active) {
+    .tok[data-mask]:not([data-mask="none"]) {
+      forced-color-adjust: none;
+      border-block-end-color: ButtonText;
+    }
+    .ln[data-current="true"]::before {
+      background: Highlight;
+    }
+  }
+}

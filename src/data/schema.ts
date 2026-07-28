@@ -1,12 +1,7 @@
 import type { DBSchema } from 'idb';
 import { DB_NAME } from '../brand';
-import type {
-  CleanupConfig,
-  DocKind,
-  Role,
-  StructureOverride,
-} from '../core/text/types';
 import type { BlankStyle, CueStyle, MethodId } from '../core/mask/types';
+import type { CleanupConfig, DocKind, Role, StructureOverride } from '../core/text/types';
 
 export { DB_NAME };
 
