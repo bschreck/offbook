@@ -1,0 +1,33 @@
+@layer components {
+  .update-prompt {
+    position: fixed;
+    inset-inline: var(--sp-4);
+    inset-block-start: calc(var(--sp-4) + env(safe-area-inset-top));
+    z-index: 60;
+    display: flex;
+    align-items: center;
+    gap: var(--sp-3);
+    max-inline-size: 480px;
+    margin-inline: auto;
+    padding: var(--sp-3) var(--sp-4);
+    border-radius: var(--r-sm);
+    background: var(--surface-raised);
+    border: 1px solid var(--accent);
+    box-shadow: var(--shadow-fab);
+    font-size: var(--fs-sm);
+  }
+
+  .update-prompt__action {
+    font-weight: 600;
+    color: var(--accent-ink);
+    min-height: 36px;
+    padding-inline: var(--sp-2);
+  }
+
+  .update-prompt__dismiss {
+    color: var(--text-faint);
+    font-size: var(--fs-lg);
+    min-height: 36px;
+    min-inline-size: 36px;
+  }
+}

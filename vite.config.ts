@@ -20,6 +20,9 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'prompt',
+      // We register the worker ourselves from <UpdatePrompt>, so the auto-injected
+      // registration script would be a second, competing registration.
+      injectRegister: false,
       includeAssets: ['favicon.svg', 'icons/apple-touch-icon-180.png'],
       manifest: {
         id: base,
