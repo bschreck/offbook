@@ -53,7 +53,7 @@ export interface DeriveResult {
  * Bump when any stage's output changes shape or content for the same input. Documents whose
  * stored `pipelineVersion` differs are re-derived on read, and their chunks re-anchored.
  */
-export const PIPELINE_VERSION = 2;
+export const PIPELINE_VERSION = 3;
 
 export function deriveDocument(input: DeriveInput): DeriveResult {
   const text = input.manualText ?? input.sourceText;

@@ -323,3 +323,43 @@ describe('runCleanup', () => {
     expect(cleanForSniff(hardWrapped)).toHaveLength(3);
   });
 });
+
+describe('dropArtifacts — regressions found by importing a real script', () => {
+  it('keeps interleaving character cues, which look exactly like running headers', () => {
+    // ALGERNON and LANE each recur at a near-regular interval under 60 characters —
+    // every other test for a running header passes on them. Interleaving is the signal
+    // that they are a cast and not a page header.
+    const scene = [
+      'ALGERNON',
+      'Did you hear what I was playing, Lane?',
+      '',
+      'LANE',
+      'I didn’t think it polite to listen, sir.',
+      '',
+      'ALGERNON',
+      'I’m sorry for that, for your sake.',
+      '',
+      'LANE',
+      'Yes, sir.',
+      '',
+      'ALGERNON',
+      'And have you got the cucumber sandwiches cut?',
+      '',
+      'LANE',
+      'Yes, sir; eight bottles and a pint.',
+    ];
+    const { lines } = dropArtifacts(scene);
+    expect(lines.filter((l) => l === 'ALGERNON')).toHaveLength(3);
+    expect(lines.filter((l) => l === 'LANE')).toHaveLength(3);
+  });
+
+  it('still drops a lone running header in the same shape', () => {
+    const paged: string[] = [];
+    for (let page = 0; page < 4; page++) {
+      paged.push('THE TEMPEST');
+      for (let i = 0; i < 6; i++) paged.push(`Line ${page}-${i} of the scene, spoken aloud.`);
+    }
+    const { lines } = dropArtifacts(paged);
+    expect(lines).not.toContain('THE TEMPEST');
+  });
+});

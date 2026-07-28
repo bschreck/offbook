@@ -197,13 +197,53 @@ function recurringHeaders(lines: string[]): Map<string, number[]> {
     if (at) at.push(i);
     else seen.set(t, [i]);
   });
-  const headers = new Map<string, number[]>();
+  const candidates = new Map<string, number[]>();
   for (const [text, at] of seen) {
     if (at.length >= MIN_HEADER_REPEATS && nearRegular(at) && !isRepeatingBlock(lines, at)) {
-      headers.set(text, at);
+      candidates.set(text, at);
     }
   }
+  return dropInterleaved(candidates);
+}
+
+/**
+ * A running header repeats ALONE in its slot. Character cues repeat too — `ALGERNON` and
+ * `LANE` every few lines look exactly like page headers to every test above — but they
+ * INTERLEAVE with each other, and a page header never interleaves with a second header.
+ *
+ * Without this, importing a two-hander silently deletes every character name in it, which
+ * is how the actor feature was found broken on the very first real script.
+ */
+function dropInterleaved(candidates: Map<string, number[]>): Map<string, number[]> {
+  if (candidates.size < 2) return candidates;
+
+  const entries = [...candidates.entries()];
+  const cues = new Set<string>();
+  for (let i = 0; i < entries.length; i++) {
+    for (let j = i + 1; j < entries.length; j++) {
+      const a = entries[i];
+      const b = entries[j];
+      if (!a || !b) continue;
+      if (interleaves(a[1], b[1])) {
+        cues.add(a[0]);
+        cues.add(b[0]);
+      }
+    }
+  }
+
+  const headers = new Map<string, number[]>();
+  for (const [text, at] of candidates) if (!cues.has(text)) headers.set(text, at);
   return headers;
+}
+
+/** True when some occurrence of `b` falls strictly between two occurrences of `a`. */
+function interleaves(a: number[], b: number[]): boolean {
+  for (let i = 1; i < a.length; i++) {
+    const lo = a[i - 1] ?? 0;
+    const hi = a[i] ?? 0;
+    if (b.some((x) => x > lo && x < hi)) return true;
+  }
+  return false;
 }
 
 /**
