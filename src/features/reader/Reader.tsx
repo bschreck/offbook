@@ -289,7 +289,6 @@ export function Reader({ docId }: { docId: string }) {
                 data-words={words}
                 style={{ '--est-h': `${Math.max(1, lines.length) * 2}em` } as React.CSSProperties}
               >
-                {block.speakerLabel && <div className="blk__speaker">{block.speakerLabel}</div>}
                 {lines.map((line) => (
                   <LineView
                     key={line.idx}
