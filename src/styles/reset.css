@@ -1,0 +1,81 @@
+@layer reset {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100dvh;
+    /* iOS: stop the whole page rubber-banding; the reader manages its own scroller */
+    overscroll-behavior-y: none;
+    font-family: var(--font-ui);
+    font-size: var(--fs-base);
+    line-height: var(--lh-body);
+    color: var(--text-body);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img,
+  picture,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* 16px floor: anything smaller makes iOS Safari zoom on focus */
+  input,
+  textarea,
+  select {
+    font-size: max(var(--fs-base), 1rem);
+  }
+
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: var(--lh-tight);
+    font-weight: 600;
+    color: var(--text-strong);
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--r-xs);
+  }
+
+  :root[data-theme='contrast'] :focus-visible {
+    outline-width: 3px;
+    outline-offset: 3px;
+  }
+}

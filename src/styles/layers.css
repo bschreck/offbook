@@ -1,0 +1,3 @@
+/* Cascade order is declared once, here, before any layer has content.
+   Anything unlayered still wins over all of these — keep feature CSS in a layer. */
+@layer reset, tokens, components, utilities;

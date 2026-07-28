@@ -1,0 +1,197 @@
+/* Design tokens. PLAN.md §12. Contrast ratios in the plan are load-bearing — if you
+   change a colour, recheck the ratio noted beside it. */
+@layer tokens {
+  :root {
+    /* ---- light (default) ---- */
+    --paper: #faf9f7;
+    --surface: #ffffff;
+    --surface-sunk: #f2f0ec;
+    --surface-raised: #ffffff;
+
+    --text-strong: #14161a; /* 17.21:1 */
+    --text-body: #22262b; /* 14.46:1 */
+    --text-muted: #585f68; /* 6.14:1 */
+    --text-faint: #6b747e; /* 4.51:1 — same value as --mask-rule, on purpose */
+
+    --border: #e3dfd8;
+    --border-strong: #c9c4ba;
+    --border-interactive: #868d95; /* 3.19:1 — SC 1.4.11 */
+
+    --accent: #10756a; /* 5.29:1 */
+    --accent-ink: #0c6157; /* 6.97:1 */
+    --accent-on: #ffffff;
+    --accent-wash: #e2f1ee;
+
+    --mask-fill: #eae6de;
+    --mask-rule: #6b747e; /* THE load-bearing token: 4.51:1 vs paper, 3.81:1 vs mask-fill */
+    --peek-text: #7a4a00; /* 7.11:1 */
+    --peek-bg: #fdf0d6;
+    --line-current-bg: #fff3ce;
+
+    --success: #1e6b3a;
+    --danger: #a4262c;
+    --focus: #0c6157;
+
+    /* ---- type scale (§12.4) ---- */
+    --fs-2xs: 0.6875rem;
+    --fs-xs: 0.75rem;
+    --fs-sm: 0.875rem;
+    --fs-base: 1rem; /* 16px minimum on inputs or iOS Safari zooms on focus */
+    --fs-md: 1.0625rem;
+    --fs-lg: 1.25rem;
+    --fs-xl: 1.5rem;
+    --fs-2xl: 1.875rem;
+
+    --lh-tight: 1.2;
+    --lh-body: 1.5;
+
+    /* reader scale is user-controlled and independent of the UI scale */
+    --fs-reader: 22px;
+    --lh-reader: 1.65;
+    --measure: 32ch;
+
+    /* ---- spacing, 4px base ---- */
+    --sp-1: 4px;
+    --sp-2: 8px;
+    --sp-3: 12px;
+    --sp-4: 16px;
+    --sp-5: 20px;
+    --sp-6: 24px;
+    --sp-8: 32px;
+    --sp-10: 40px;
+    --sp-12: 48px;
+    --sp-16: 64px;
+    --gutter: 16px;
+
+    /* ---- radii: nothing rounder than 16px, over-rounding reads as "toy" ---- */
+    --r-xs: 4px;
+    --r-sm: 8px;
+    --r-md: 12px;
+    --r-lg: 16px;
+    --r-full: 999px;
+
+    /* ---- exactly two shadows in the whole app ---- */
+    --shadow-sheet: 0 -8px 32px rgb(20 22 26 / 0.14);
+    --shadow-fab: 0 2px 12px rgb(20 22 26 / 0.18);
+
+    /* ---- motion: durations are 0 unless the user opts in, below ---- */
+    --t-fast: 0ms;
+    --t-base: 0ms;
+    --t-slow: 0ms;
+    --ease-out: cubic-bezier(0.2, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+    --font-ui: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+      sans-serif;
+    --font-reader: var(--font-ui);
+
+    color-scheme: light;
+  }
+
+  /* Reduced motion is the STRUCTURAL DEFAULT (§12.4): durations are zero above and only
+     switched on for users who have expressed no preference against motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    :root {
+      --t-fast: 120ms;
+      --t-base: 180ms;
+      --t-slow: 260ms;
+    }
+  }
+
+  /* ---- dark ---- */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --paper: #121417;
+      --surface: #1a1d21;
+      --surface-sunk: #0d0f11;
+      --surface-raised: #23272c;
+
+      /* warm off-white, not pure white: pure white at 22px halates, which is exactly
+         wrong for someone in a dark wing waiting to go on */
+      --text-strong: #edebe6; /* 15.49:1 */
+      --text-body: #dcd9d3;
+      --text-muted: #a3a9b1;
+      --text-faint: #7c838c;
+
+      --border: #2f343a;
+      --border-strong: #414852;
+      --border-interactive: #767e88;
+
+      --accent: #5fc9bc;
+      --accent-ink: #5fc9bc;
+      --accent-on: #121417;
+      --accent-wash: #17332f;
+
+      --mask-fill: #24282d;
+      --mask-rule: #79818b;
+      --peek-text: #e2b15e;
+      --peek-bg: #2a2419;
+      --line-current-bg: #1e2429;
+
+      --success: #6fcb8e;
+      --danger: #f2857f;
+      --focus: #7fdcd1;
+
+      --shadow-sheet: 0 -8px 32px rgb(0 0 0 / 0.5);
+      --shadow-fab: 0 2px 12px rgb(0 0 0 / 0.5);
+
+      color-scheme: dark;
+    }
+  }
+
+  /* The theme toggle must win in BOTH directions, so each explicit choice is stated. */
+  :root[data-theme='dark'] {
+    --paper: #121417;
+    --surface: #1a1d21;
+    --surface-sunk: #0d0f11;
+    --surface-raised: #23272c;
+    --text-strong: #edebe6;
+    --text-body: #dcd9d3;
+    --text-muted: #a3a9b1;
+    --text-faint: #7c838c;
+    --border: #2f343a;
+    --border-strong: #414852;
+    --border-interactive: #767e88;
+    --accent: #5fc9bc;
+    --accent-ink: #5fc9bc;
+    --accent-on: #121417;
+    --accent-wash: #17332f;
+    --mask-fill: #24282d;
+    --mask-rule: #79818b;
+    --peek-text: #e2b15e;
+    --peek-bg: #2a2419;
+    --line-current-bg: #1e2429;
+    --success: #6fcb8e;
+    --danger: #f2857f;
+    --focus: #7fdcd1;
+    --shadow-sheet: 0 -8px 32px rgb(0 0 0 / 0.5);
+    --shadow-fab: 0 2px 12px rgb(0 0 0 / 0.5);
+    color-scheme: dark;
+  }
+
+  /* ---- high contrast (§12.3): an override layer, not a third palette ---- */
+  :root[data-theme='contrast'],
+  :root[data-theme='contrast'] * {
+    --text-strong: #000000;
+    --text-body: #000000;
+    --text-muted: #000000;
+    --text-faint: #000000;
+    --mask-rule: #000000;
+    --mask-fill: #e0e0e0;
+    --border: #868d95;
+    --border-strong: #868d95;
+    --line-current-bg: transparent;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme='contrast'],
+    :root[data-theme='contrast'] * {
+      --text-strong: #ffffff;
+      --text-body: #ffffff;
+      --text-muted: #ffffff;
+      --text-faint: #ffffff;
+      --mask-rule: #ffffff;
+      --mask-fill: #303030;
+    }
+  }
+}

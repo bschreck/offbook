@@ -1,0 +1,23 @@
+# Cloudflare Pages honours this file; GitHub Pages does not (PLAN.md §0.0 A7), which is why
+# index.html also carries the policy as a meta tag. Keep the two in sync.
+#
+# media-src/connect-src blob: are NOT optional once recording lands (v1.1) — without them
+# playback and MediaSession fail with a CSP violation and no obvious cause.
+#
+# Any third-party asset download would require editing this file and redeploying, which makes
+# "opt-in model download" a release decision rather than a runtime toggle. That is deliberate.
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: geolocation=(), camera=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/sw.js
+  Cache-Control: no-cache
+
+/manifest.webmanifest
+  Cache-Control: no-cache

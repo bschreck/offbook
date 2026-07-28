@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <!--
+      CSP ships as a meta tag because GitHub Pages cannot serve custom headers (PLAN.md §0.0 A7).
+      public/_headers carries the same policy plus frame-ancestors and nosniff for the day this
+      moves to Cloudflare Pages. 'unsafe-inline' for style-src covers React's inline style
+      attributes (we set per-token custom properties); there is no runtime-generated stylesheet.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self' blob:; worker-src 'self' blob:; manifest-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="theme-color" content="#FAF9F7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121417" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Offbook" />
+    <meta
+      name="description"
+      content="Learn any text by heart by progressively hiding it. Works offline, no account, no limits."
+    />
+    <title>Offbook</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>Offbook needs JavaScript to run. It stores everything on your own device.</noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

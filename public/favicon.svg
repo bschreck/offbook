@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Offbook">
+  <rect width="64" height="64" rx="14" fill="#121417"/>
+  <!-- three lines of text: the first two remembered, the third gone but for its rule -->
+  <rect x="14" y="20" width="36" height="5" rx="2.5" fill="#EDEBE6"/>
+  <rect x="14" y="31" width="26" height="5" rx="2.5" fill="#EDEBE6"/>
+  <rect x="14" y="44" width="36" height="3" rx="1.5" fill="#5FC9BC"/>
+</svg>
