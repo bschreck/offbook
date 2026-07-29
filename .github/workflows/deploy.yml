@@ -1,8 +1,9 @@
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (fallback)
 
+# Cloudflare Pages at the root is the canonical deploy (ADR-0002). This one is kept as a
+# manual escape hatch only: it is NOT run on push, because two live origins would mean two
+# separate IndexedDB libraries and a user could not tell which one held their texts.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -18,8 +19,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -31,7 +32,7 @@ jobs:
           VITE_BASE: /offbook/
       # Pages has no SPA fallback, so a deep link 404s unless index.html is also the 404 page.
       - run: cp dist/index.html dist/404.html
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: dist
 
@@ -43,4 +44,4 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5

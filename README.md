@@ -6,7 +6,7 @@ Paste or import your text, read it aloud, and hide a few words. Read it again. H
 going until nothing is on screen and you can still say it. A teleprompter that gradually stops
 helping you.
 
-**→ [bschreck.github.io/offbook](https://bschreck.github.io/offbook/)**
+**→ [offbook-4ev.pages.dev](https://offbook-4ev.pages.dev/)**
 
 ## What it does
 

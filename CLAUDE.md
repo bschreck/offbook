@@ -75,7 +75,17 @@ npm run build      # tsc -b && vite build
 
 ## Deploy
 
-GitHub Pages at `https://bschreck.github.io/offbook/`, from `.github/workflows/deploy.yml` on
-push to `main`. The sub-path comes from `VITE_BASE`; `public/_headers` and `_redirects` are
-committed so switching to Cloudflare Pages at a root domain is a dashboard click and an env
-change, with no code change.
+**Cloudflare Pages at the root**, `https://offbook-4ev.pages.dev`, from
+`.github/workflows/deploy-cloudflare.yml` on push to `main` (ADR-0002). Because it is served at
+`/`, `public/_headers` is honoured: the CSP is a real response header including
+`frame-ancestors`, `/assets/*` is immutable for a year, `/sw.js` is `no-cache`, and
+`_redirects` handles SPA deep links.
+
+`deploy.yml` still builds for GitHub Pages under `VITE_BASE=/offbook/` but is
+**workflow_dispatch only** — a manual escape hatch. Do not put it back on `push`: two live
+origins means two separate IndexedDB libraries, and a user cannot tell which one holds their
+texts.
+
+Secrets: `CLOUDFLARE_API_TOKEN` (Account -> Cloudflare Pages -> Edit, nothing else) and
+`CLOUDFLARE_ACCOUNT_ID` (32 hex chars; the workflow asserts the length, because a stray
+newline surfaces as an unhelpful `code: 7003 could not route`).
