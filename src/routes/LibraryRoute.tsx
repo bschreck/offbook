@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
 import type { DocumentRecord } from '../data/schema';
+import { useAccount } from '../stores/accountStore';
 import { type SortOrder, searchDocuments, sortDocuments, useLibrary } from '../stores/libraryStore';
 import { useUi } from '../stores/uiStore';
 import '../features/library/library.css';
@@ -55,7 +56,19 @@ export function LibraryRoute() {
               Add your first text
             </Link>
           </p>
+          <p style={{ marginBlockStart: 'var(--sp-4)' }}>
+            <Link className="btn" to="/account">
+              I already have an account
+            </Link>
+          </p>
+          <p
+            className="faint"
+            style={{ fontSize: 'var(--fs-xs)', marginBlockStart: 'var(--sp-3)' }}
+          >
+            Signing in brings the texts from your other devices onto this one.
+          </p>
         </div>
+        <AccountFooter />
       </main>
     );
   }
@@ -150,10 +163,28 @@ export function LibraryRoute() {
         </ul>
       )}
 
-      <p className="lib__footer">
-        <Link to="/settings">Settings</Link> · <Link to="/about">About</Link>
-      </p>
+      <AccountFooter />
     </main>
+  );
+}
+
+/**
+ * Shown on both the empty and populated library, because the empty one is exactly where a
+ * signed-out person on a new device needs it and it was missing there.
+ */
+function AccountFooter() {
+  const status = useAccount((s) => s.status);
+  const account = useAccount((s) => s.account);
+
+  return (
+    <p className="lib__footer">
+      {status === 'signedIn' && account ? (
+        <Link to="/account">{account.username}</Link>
+      ) : (
+        <Link to="/account">Sign in to sync</Link>
+      )}{' '}
+      · <Link to="/settings">Settings</Link> · <Link to="/about">About</Link>
+    </p>
   );
 }
 

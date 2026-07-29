@@ -6,6 +6,7 @@ import { LibraryRoute } from './routes/LibraryRoute';
 import { NotFoundRoute } from './routes/NotFoundRoute';
 import { ReaderRoute } from './routes/ReaderRoute';
 import { SettingsRoute } from './routes/SettingsRoute';
+import { SignInRoute } from './routes/SignInRoute';
 import { TextRoute } from './routes/TextRoute';
 
 const errorElement = <RouteError />;
@@ -18,6 +19,9 @@ export const router = createBrowserRouter(
     { path: '/t/:id', element: <TextRoute />, errorElement },
     { path: '/t/:id/read', element: <ReaderRoute />, errorElement },
     { path: '/settings', element: <SettingsRoute />, errorElement },
+    { path: '/account', element: <SignInRoute />, errorElement },
+    // /signin is an alias, because that is what people type and guess.
+    { path: '/signin', element: <SignInRoute />, errorElement },
     { path: '/about', element: <AboutRoute />, errorElement },
     { path: '*', element: <NotFoundRoute /> },
   ],
