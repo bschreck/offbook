@@ -45,6 +45,24 @@ jobs:
           fi
           echo "CLOUDFLARE_ACCOUNT_ID=$ACC" >> "$GITHUB_ENV"
 
+      # Fail before deploying rather than after, if the D1 id was never filled in — otherwise
+      # the site goes live with a working sign-in button in front of a broken backend, which
+      # is worse than not shipping the feature at all.
+      - name: Check the D1 binding is configured
+        run: |
+          if grep -q 'REPLACE_WITH_D1_DATABASE_ID' wrangler.jsonc; then
+            echo "::error::wrangler.jsonc still has the placeholder database_id. Run 'npx wrangler d1 create offbook' and paste the id, or the /api routes will 500 in production."
+            exit 1
+          fi
+
+      # Migrations run before the deploy, so the schema is never behind the code that needs it.
+      # Requires Account -> D1 -> Edit on the token, in addition to Pages -> Edit.
+      - name: Apply D1 migrations
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          command: d1 migrations apply offbook --remote
+
       - uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
