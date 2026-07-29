@@ -1,0 +1,45 @@
+name: Cloudflare doctor
+
+# Throwaway diagnostic: asks Cloudflare what this token can actually see, so a failed
+# deploy tells us whether the account id or the project name is the problem. Delete once
+# the deploy is green.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: List Pages projects visible to this token
+        continue-on-error: true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          echo "account id length: ${#CLOUDFLARE_ACCOUNT_ID}"
+          case "$CLOUDFLARE_ACCOUNT_ID" in
+            *[!0-9a-f]*) echo "account id contains a character outside [0-9a-f] — likely whitespace or a newline" ;;
+            *) echo "account id is clean lowercase hex" ;;
+          esac
+          npx --yes wrangler@4 pages project list
+
+      - name: Ask the REST API directly
+        continue-on-error: true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          ACC=$(printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | tr -d '[:space:]')
+          echo "--- token verify ---"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify \
+            | sed 's/"id":"[^"]*"/"id":"REDACTED"/g'
+          echo
+          echo "--- pages projects (names only) ---"
+          curl -s -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$ACC/pages/projects" \
+            | grep -o '"name":"[^"]*"' | head -20 || echo "(no names in response)"
