@@ -1,0 +1,101 @@
+@layer components {
+  .account {
+    margin-block-start: var(--sp-8);
+  }
+
+  .account__heading {
+    font-size: var(--fs-md);
+    margin-block-end: var(--sp-2);
+  }
+
+  .account__blurb {
+    font-size: var(--fs-sm);
+    color: var(--text-muted);
+    margin-block-end: var(--sp-3);
+  }
+
+  .account__form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-3);
+  }
+
+  .account__label {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-1);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  /* 16px minimum or iOS Safari zooms the whole page on focus — see tokens.css §12.4 */
+  .account__input {
+    inline-size: 100%;
+    min-height: 44px;
+    padding: var(--sp-2) var(--sp-3);
+    font-family: var(--font-ui);
+    font-size: var(--fs-base);
+    font-weight: 400;
+    color: var(--text-body);
+    background: var(--surface-sunk);
+    border: 1px solid var(--border-interactive);
+    border-radius: var(--r-sm);
+  }
+  .account__input[aria-invalid="true"] {
+    border-color: var(--danger);
+  }
+
+  .account__hint {
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    color: var(--text-faint);
+  }
+
+  .account__error {
+    font-size: var(--fs-xs);
+    font-weight: 400;
+    color: var(--danger);
+  }
+
+  .account__note {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    min-height: 1.5em;
+  }
+
+  .account__who {
+    font-size: var(--fs-sm);
+    margin-block-end: var(--sp-2);
+  }
+
+  .account__quota {
+    font-size: var(--fs-xs);
+    color: var(--text-muted);
+    margin-block-end: var(--sp-1);
+  }
+
+  /* Decorative: the figures above are the accessible version of this. */
+  .account__bar {
+    block-size: 6px;
+    border-radius: var(--r-full);
+    background: var(--surface-sunk);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-block-end: var(--sp-3);
+  }
+  .account__bar > span {
+    display: block;
+    block-size: 100%;
+    background: var(--accent);
+  }
+  .account__bar--full > span {
+    background: var(--danger);
+  }
+
+  .account__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "offbook",
+  "compatibility_date": "2026-07-01",
+  "pages_build_output_dir": "dist",
+
+  // The sync backend. ADR-0008.
+  //
+  // `database_id` is a plain identifier, not a secret — Cloudflare's own docs commit it.
+  // Create the database once with:
+  //     npx wrangler d1 create offbook
+  // and paste the id it prints here, then apply migrations with:
+  //     npx wrangler d1 migrations apply offbook --remote
+  //
+  // The API token needs Account -> D1 -> Edit for that second command.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "offbook",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID"
+    }
+  ]
+}

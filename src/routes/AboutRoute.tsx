@@ -25,17 +25,32 @@ export function AboutRoute() {
         measurement. If you are peeking constantly, step back down a stage.
       </p>
 
+      {/* ADR-0008 made the old "no network requests at all" sentence false for a signed-in
+          user. Saying what is actually true is not optional. */}
       <h2 style={{ marginBlockStart: 'var(--sp-6)', fontSize: 'var(--fs-md)' }}>Privacy</h2>
       <p>
-        Your texts are stored on this device, in your browser, and nowhere else. There is no
-        account, no server and no analytics.{' '}
-        <strong>After the app loads it makes no network requests at all</strong> — you can put the
-        device in aeroplane mode and everything still works.
+        <strong>With no account, nothing you write leaves this device.</strong> That is the default:
+        your texts are stored in your browser and nowhere else. The one request the app makes
+        unbidden is on the Settings screen, where it asks our own server whether you are signed in;
+        it carries nothing but the question. Put the device in aeroplane mode and everything still
+        works.
       </p>
       <p style={{ marginBlockStart: 'var(--sp-3)' }}>
-        The flip side is that nothing is backed up for you. Save a backup file from Settings, and
-        install Offbook to your home screen — Safari clears an ordinary website’s storage after
-        about a week without a visit, and installing is what prevents that.
+        If you sign in, your texts and your practice history replicate to Offbook’s own server, so
+        they reach your other devices. That is the only thing an account does. Nothing goes to a
+        third party, there is no analytics and no tracking, and this device stays the original — a
+        server outage cannot stop you rehearsing something already here.
+      </p>
+      <p style={{ marginBlockStart: 'var(--sp-3)' }}>
+        Your password is never sent. Your device turns it into a different value and sends only
+        that, which is why signing in takes a second — the calculation is deliberately slow so that
+        guessing at it is slow too. The flip side: nobody can reset a forgotten password, so keep it
+        in your password manager. Signing out leaves the copy on this device alone.
+      </p>
+      <p style={{ marginBlockStart: 'var(--sp-3)' }}>
+        With no account, nothing is backed up for you. Save a backup file from Settings, and install
+        Offbook to your home screen — Safari clears an ordinary website’s storage after about a week
+        without a visit, and installing is what prevents that.
       </p>
       <p style={{ marginBlockStart: 'var(--sp-3)' }} className="muted">
         Only add material you have the right to use.
@@ -53,7 +68,8 @@ export function AboutRoute() {
           <kbd>S</kbd> starts auto-scroll, <kbd>F</kbd> is full screen.
         </li>
         <li>
-          Progress is per browser. Use separate browser profiles if you need separate progress.
+          Progress is per browser, unless you sign in, in which case it follows your account. Use
+          separate browser profiles, or no account, if you need separate progress.
         </li>
         <li>The sample texts are all public domain.</li>
       </ul>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import type { RestorePlan } from '../core/backup/import';
 import { isStandalone, readStorageStatus, requestPersistence } from '../data/storageInfo';
+import { AccountPanel } from '../features/account/AccountPanel';
 import {
   applyRestorePlan,
   buildRestorePlan,
@@ -13,6 +14,7 @@ import { useLibrary } from '../stores/libraryStore';
 import { useSettings } from '../stores/settingsStore';
 import { useUi } from '../stores/uiStore';
 import '../components/sheet.css';
+import '../features/account/account.css';
 
 export function SettingsRoute() {
   const settings = useSettings((s) => s.settings);
@@ -134,6 +136,8 @@ export function SettingsRoute() {
         </div>
       </div>
 
+      <AccountPanel />
+
       <h2 style={{ marginBlockStart: 'var(--sp-8)', fontSize: 'var(--fs-md)' }}>
         Your texts live on this device
       </h2>
@@ -141,6 +145,13 @@ export function SettingsRoute() {
         {docs.length} text{docs.length === 1 ? '' : 's'}
         {storage?.usageBytes != null && ` · about ${formatBytes(storage.usageBytes)} used`}
         {storage?.persisted ? ' · storage is marked persistent' : ' · storage is not persistent'}
+      </p>
+      {/* ADR-0008: this device is still the original. Signing in adds a replica, and the copy
+          here keeps working when the server does not. */}
+      <p className="muted" style={{ fontSize: 'var(--fs-xs)', marginBlockEnd: 'var(--sp-3)' }}>
+        This device holds the original. With no account it is the only copy. Signed in, a copy also
+        sits on Offbook’s own server so your other devices can catch up — and rehearsing still works
+        with the network off either way.
       </p>
 
       {storage && !storage.persisted && (

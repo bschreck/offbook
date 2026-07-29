@@ -10,3 +10,6 @@ tsconfig.tsbuildinfo
 .env
 .env.*
 !.env.example
+
+# wrangler local state (local D1 sqlite, etc)
+.wrangler/
