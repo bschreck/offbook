@@ -69,7 +69,9 @@ jobs:
         run: |
           body=$(curl -s -H "Authorization: Bearer $CF_TOKEN" \
             "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects?per_page=1")
-          if ! echo "$body" | grep -q '"success":true'; then
+          # Whitespace-tolerant: Cloudflare pretty-prints, so the body says '"success": true'
+          # with a space. Matching the unspaced form failed against a perfectly good response.
+          if ! echo "$body" | grep -qE '"success":[[:space:]]*true'; then
             echo "Cloudflare said: $(echo "$body" | head -c 300)"
             echo "::error::CLOUDFLARE_API_TOKEN cannot list Pages projects for this account. Check it has Account -> Cloudflare Pages -> Edit and Account -> D1 -> Edit, and that CLOUDFLARE_ACCOUNT_ID is the right account."
             exit 1
