@@ -30,9 +30,23 @@ jobs:
       # instead of the 404.html copy trick. PLAN.md §0.0 A7 / ADR-0002.
       - run: npm run build
 
+      # A stray newline or space in the account-id secret produces a baffling
+      # "could not route to /accounts/.../pages/projects [code: 7003]" — the id lands in a
+      # URL path, so any whitespace corrupts the route rather than failing auth. Strip it
+      # here so a copy-paste slip can never cost another debugging round.
+      - name: Normalise the account id
+        env:
+          RAW_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          ACC=$(printf '%s' "$RAW_ACCOUNT_ID" | tr -d '[:space:]')
+          if [ ${#ACC} -ne 32 ]; then
+            echo "::error::CLOUDFLARE_ACCOUNT_ID is ${#ACC} characters after trimming; a Cloudflare account id is exactly 32 hex characters. Check the secret."
+            exit 1
+          fi
+          echo "CLOUDFLARE_ACCOUNT_ID=$ACC" >> "$GITHUB_ENV"
+
       - uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: pages deploy dist --project-name=offbook --branch=main
