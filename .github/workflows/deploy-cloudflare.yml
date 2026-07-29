@@ -55,6 +55,20 @@ jobs:
             exit 1
           fi
 
+      # Cloudflare's own errors for a bad token are unhelpful ("could not route", code 7003),
+      # so ask it directly and fail with something actionable.
+      - name: Check the API token is valid
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          body=$(curl -s -H "Authorization: Bearer $CF_TOKEN" \
+            https://api.cloudflare.com/client/v4/user/tokens/verify)
+          if ! echo "$body" | grep -q '"success":true'; then
+            echo "::error::CLOUDFLARE_API_TOKEN is not a valid token. Re-issue it (Account -> Cloudflare Pages -> Edit, plus Account -> D1 -> Edit) and set it again with: gh secret set CLOUDFLARE_API_TOKEN --repo bschreck/offbook"
+            exit 1
+          fi
+          echo "token verified"
+
       # Migrations run before the deploy, so the schema is never behind the code that needs it.
       # Requires Account -> D1 -> Edit on the token, in addition to Pages -> Edit.
       - name: Apply D1 migrations

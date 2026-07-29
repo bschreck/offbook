@@ -19,7 +19,8 @@
     "analyze": "vite build --mode analyze",
     "db:migrate": "wrangler d1 migrations apply offbook --remote",
     "db:migrate:local": "wrangler d1 migrations apply offbook --local",
-    "dev:api": "wrangler pages dev dist --d1=DB"
+    "dev:api": "wrangler pages dev dist --d1=DB",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name=offbook --branch=main"
   },
   "dependencies": {
     "idb": "^8.0.3",
